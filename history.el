@@ -441,7 +441,7 @@ whether `history-window-local-history' is true or false."
   (and (>= history-index (length history-stack))
        (setq history-index (1- (length history-stack))))
   (insert (history-histories-string))
-  (re-search-backward "\*")
+  (search-backward "*")
   ;; Use history.
   (with-selected-window (history-window)
     (history-use-current-history)))
@@ -454,7 +454,7 @@ whether `history-window-local-history' is true or false."
   (and (< history-index 0)
        (setq history-index 0))
   (insert (history-histories-string))
-  (re-search-backward "\*")
+  (search-backward "*")
   ;; Use history.
   (with-selected-window (history-window)
     (history-use-current-history)))
@@ -502,7 +502,8 @@ See `history-advised-before-functions'
   (unless (history-ignore-buffer?)
     (> (length (if history-window-local-history
                    (window-parameter nil 'history-stack)
-                 history-stack)) 0)))
+                 history-stack))
+       0)))
 
 (defun history-add-menu-items ()
   "Add menu and tool-bar buttons."
