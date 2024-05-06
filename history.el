@@ -202,6 +202,7 @@ See `advice' feature."
     (define-key map (kbd "<return>") 'exit-minibuffer)
     (define-key map (kbd "q") 'history-preview-cancel-history)
     (define-key map (kbd "<escape>") 'history-preview-cancel-history)
+    (define-key map (kbd "d") 'history-preview-delete-current)
     map)
   "The key map for browsing the history.")
 
@@ -458,6 +459,26 @@ whether `history-window-local-history' is true or false."
   ;; Use history.
   (with-selected-window (history-window)
     (history-use-current-history)))
+
+
+(defun history-preview-delete-current ()
+  "Delete current previewing history item."
+  (interactive)
+  (when history-stack
+    (let* ((history (nth history-index history-stack))
+           (marker (plist-get history :marker)))
+      (set-marker marker nil)
+      (history-remove-invalid-history)))
+  (cond
+   (history-stack
+    (delete-minibuffer-contents)
+    (insert (history-histories-string))
+    (search-backward "*")
+    (with-selected-window (history-window)
+      (history-use-current-history)))
+   (t
+    (history-preview-cancel-history))))
+
 
 (defun history-preview-cancel-history ()
   "Keymap function for canceling history."
